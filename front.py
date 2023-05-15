@@ -6,7 +6,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 # Conexión con la API que contiene la información de las estaciones
-url = "http://172.17.0.2:5000/mostrar_estacionesnivel?psw=12345678"
+url = "http://172.17.0.2:5000/sensores_nivel?psw=12345678"
 data = pd.read_json(url, convert_dates='True')
 
 # Captura de la información de las estaciones
@@ -54,12 +54,17 @@ app.validation_layout = html.Div([
                 Input('url', 'pathname'))
 def display_page(pathname):
         if pathname == "/":
-                return login_layout
+            return login_layout
         elif pathname == "/estaciones":
-                return info_estaciones
+            return info_estaciones
         else:
-                return html.Div([html.H1("Acceso denegado"), dcc.Link("Regresar", href='/')])
-
+            return html.Div([html.H1("Acceso denegado"), dcc.Link("Regresar", href='/')])
+##Para guardar los registors en la base de Datos
+ruta_archivo="https://github.com/auraarbelaez/Telematica_Final/blob/main/DB/login_database.csv"
+def ruta_basesdatos(ruta_archivo):
+    with open(ruta_archivo, 'r') as archivo:
+        contenido = archivo.read()
+    return contenido
 
 @callback(Output('url', 'pathname'),
                 [Input('btn_ingresar', 'n_clicks'),
@@ -67,11 +72,10 @@ def display_page(pathname):
                 Input('pw', 'value')])
 def update_page(n_clicks, input_user, input_pw):
         if n_clicks > 0:
-                if (input_user, input_pw) in login_tuples:
-                        return '/estaciones'
+                if (input_user, input_pw) in contenido:
+                    return '/estaciones'
                 else:
-                        return '/other'
-
+                    return '/other'
 
 if _name=='main_':
         app.run_server(host='0.0.0.0', port=80)
