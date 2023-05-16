@@ -14,7 +14,7 @@ levels = [data['datos'][i]['porcentajeNivel'] for i in range(100)]
 latitud = [data['datos'][i]['coordenadas'][0]['latitud'] for i in range(100)]
 longitud = [data['datos'][i]['coordenadas'][0]['longitud'] for i in range(100)]
 
-# Creación de la figura para la página principal
+# Creación de la Grafica para la página principal
 graphic = plot.Figure(plot.Densitymapbox(lat=latitud, lon=longitud, z=levels, radius=20, opacity=0.9, zmin=0, zmax=100))
 graphic.update_layout(mapbox_style='stamen-terrain', mapbox_center_lon=-75.589, mapbox_center_lat=6.2429)
 graphic.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
@@ -87,7 +87,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 # Conexión con la API que contiene la información de las estaciones
-url = "http://172.17.0.2:5000/sensores_nivel?psw=12345678"
+url = "http://172.17.0.2:5000/sensores_nivel?contraseña=0000"
 data = pd.read_json(url, convert_dates='True')
 
 # Captura de la información de las estaciones
@@ -120,9 +120,9 @@ info_estaciones = html.Div([
 login_layout = html.Div([
     html.H1("Login"),
     html.Label('Nombre de usuario: '),
-    dcc.Input(id='user', type='text', value=""),
-    html.Label('Contraseña: '),
-    dcc.Input(id='pw', type='password', value=""),
+    dcc.Input(id='Usuario', type='text', value=""),
+    html.Label('Contraseña'),
+    dcc.Input(id='password', type='password', value=""),
     html.Div(style={'margin-top': '20px'}),
     html.Button("Ingresar", id='btn_ingresar', n_clicks=0)
 ], style={'display': 'flex', 'flexDirection': 'column'})
@@ -157,8 +157,8 @@ contenido = leer_archivo(ruta_archivo)
 
 @app.callback(Output('url', 'pathname'),
               [Input('btn_ingresar', 'n_clicks'),
-               Input('user', 'value'),
-               Input('pw', 'value')])
+               Input('Usuario', 'value'),
+               Input('password', 'value')])
 def update_page(n_clicks, input_user, input_pw):
     if n_clicks > 0:
         if (input_user, input_pw) in contenido:
